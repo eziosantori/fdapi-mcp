@@ -52,10 +52,10 @@
 - [x] **TEST-002** Unit tests for configuration management
 - [x] **TEST-003** Unit tests for HTTP client (basic)
 - [x] **MCP-001** Implement FastMCP 2.0 server with tool registration
+- [x] **TEST-004** Integration tests for FDAPI connectivity
 
 #### 🚧 Current Tasks
 
-- [ ] **TEST-004** Integration tests for FDAPI connectivity
 - [ ] **CLIENT-002** Add proper API endpoint URL configuration
 - [ ] **MCP-002** Test MCP tool registration and execution
 
@@ -66,7 +66,7 @@
 - [x] Error handling framework in place
 - [x] 80% test coverage for core infrastructure
 - [x] Authentication framework ready for future API keys
-- [ ] Integration tests passing
+- [x] Integration tests passing
 - [ ] MCP tools properly functional
 
 ---
