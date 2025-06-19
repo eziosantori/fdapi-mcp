@@ -25,9 +25,7 @@ class FDAPIServerMCP:
             config: Server configuration
         """
         self.config = config
-        self.fdapi_client: Optional[FDAPIClient] = None
-
-        # Create FastMCP instance
+        self.fdapi_client: Optional[FDAPIClient] = None        # Create FastMCP instance
         self.mcp = FastMCP("FDAPI MCP Server")
 
         # Register tools
@@ -38,7 +36,8 @@ class FDAPIServerMCP:
         logger.info("Starting FDAPI MCP Server...")
 
         # Initialize FDAPI client
-        self.fdapi_client = FDAPIClient(self.config.fdapi)
+        fdapi_config = self.config.get_fdapi_config()
+        self.fdapi_client = FDAPIClient(fdapi_config)
         await self.fdapi_client.start()
 
         # Test connection
@@ -212,9 +211,8 @@ class FDAPIServerMCP:
                 raise
             except Exception as e:
                 logger.error(f"Error getting article {slug}: {e}")
-                raise FDAPIError(f"Failed to get article: {e}")
+                raise FDAPIError(f"Failed to get article: {e}")        @ self.mcp.tool()
 
-        @self.mcp.tool()
         async def fdapi_health_check() -> Dict[str, Any]:
             """Check the health and connectivity of the FDAPI service.
 
@@ -226,18 +224,20 @@ class FDAPIServerMCP:
 
             try:
                 is_healthy = await self.fdapi_client.health_check()
+                fdapi_config = self.config.get_fdapi_config()
                 return {
                     "status": "healthy" if is_healthy else "unhealthy",
-                    "base_url": self.config.fdapi.base_url,
-                    "has_api_key": bool(self.config.fdapi.api_key),
-                    "timeout": self.config.fdapi.timeout,
-                    "max_retries": self.config.fdapi.max_retries,
+                    "base_url": fdapi_config.base_url,
+                    "has_api_key": bool(fdapi_config.api_key),
+                    "timeout": fdapi_config.timeout,
+                    "max_retries": fdapi_config.max_retries,
                 }
             except Exception as e:
+                fdapi_config = self.config.get_fdapi_config()
                 return {
                     "status": "error",
                     "message": str(e),
-                    "base_url": self.config.fdapi.base_url,
+                    "base_url": fdapi_config.base_url,
                 }
 
 

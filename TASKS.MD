@@ -56,7 +56,7 @@
 
 #### 🚧 Current Tasks
 
-- [ ] **CLIENT-002** Add proper API endpoint URL configuration
+- [x] **CLIENT-002** Add proper API endpoint URL configuration
 - [ ] **MCP-002** Test MCP tool registration and execution
 
 #### Definition of Done - Phase 2

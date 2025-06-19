@@ -121,11 +121,13 @@ class FDAPIClient:
                     error_msg = f"HTTP {response.status_code}"
                     try:
                         error_data = response.json()
-                        if "message" in error_data:
+                        # Prefer 'error' or 'message' keys for error details
+                        if "error" in error_data:
+                            error_msg += f": {error_data['error']}"
+                        elif "message" in error_data:
                             error_msg += f": {error_data['message']}"
                     except Exception:
                         error_msg += f": {response.text}"
-
                     raise FDAPIResponseError(
                         error_msg, status_code=response.status_code)
 
@@ -148,6 +150,14 @@ class FDAPIClient:
                         f"Request timeout after {self.config.max_retries + 1} attempts: {e}")
                 logger.warning(f"Timeout attempt {attempt + 1}, retrying...")
                 await asyncio.sleep(2 ** attempt)
+
+            except FDAPIResponseError as e:
+                # Only retry on 5xx errors
+                if 500 <= getattr(e, 'status_code', 0) < 600 and attempt < self.config.max_retries:
+                    logger.warning(f"HTTP {e.status_code} error, retrying...")
+                    await asyncio.sleep(2 ** attempt)
+                else:
+                    raise
 
         raise FDAPIError("Request failed after all retry attempts")
 

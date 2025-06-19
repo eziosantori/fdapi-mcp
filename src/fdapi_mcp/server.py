@@ -89,6 +89,7 @@ def config() -> None:
     """Show current configuration."""
     try:
         config = ServerConfig.load()
+        fdapi_config = config.get_fdapi_config()
         console.print(Panel.fit(
             f"[bold]Server Configuration[/bold]\n\n"
             f"Host: {config.host}\n"
@@ -96,10 +97,10 @@ def config() -> None:
             f"Debug: {config.debug}\n"
             f"Log Level: {config.log_level}\n\n"
             f"[bold]FDAPI Configuration[/bold]\n\n"
-            f"Base URL: {config.fdapi.base_url}\n"
-            f"Timeout: {config.fdapi.timeout}s\n"
-            f"Max Retries: {config.fdapi.max_retries}\n"
-            f"API Key: {'***' if config.fdapi.api_key else 'Not set'}",
+            f"Base URL: {fdapi_config.base_url}\n"
+            f"Timeout: {fdapi_config.timeout}s\n"
+            f"Max Retries: {fdapi_config.max_retries}\n"
+            f"API Key: {'***' if fdapi_config.api_key else 'Not set'}",
             title="Configuration",
             border_style="blue",
         ))
