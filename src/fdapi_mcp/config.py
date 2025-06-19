@@ -36,21 +36,24 @@ class ServerConfig(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
+        extra="ignore",  # Ignore extra environment variables
     )
 
     # Server settings
-    host: str = Field(default="localhost", description="Server host")
-    port: int = Field(default=8000, description="Server port")
-    debug: bool = Field(default=False, description="Debug mode")
+    host: str = Field(default="localhost", description="Server host",
+                      alias="FDAPI_MCP_HOST")
+    port: int = Field(default=8000, description="Server port", alias="FDAPI_MCP_PORT")
+    debug: bool = Field(default=False, description="Debug mode",
+                        alias="FDAPI_MCP_DEBUG")
 
     # FDAPI settings
-    fdapi: FDAPIConfig = Field(default_factory=FDAPIConfig)
-
-    # Logging settings
-    log_level: str = Field(default="INFO", description="Logging level")
+    fdapi: FDAPIConfig = Field(default_factory=FDAPIConfig)    # Logging settings
+    log_level: str = Field(
+        default="INFO", description="Logging level", alias="FDAPI_MCP_LOG_LEVEL")
     log_format: str = Field(
         default="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        description="Log format string"
+        description="Log format string",
+        alias="FDAPI_MCP_LOG_FORMAT"
     )
 
     @classmethod
